@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
-                android:onClick="@{() -> viewModel.move(0)}"
+                android:onClick="@{() -> viewModel.moveGame(0)}"
                 android:text="@{viewModel.field[0] }"
                 android:textSize="40sp"
                 tools:text="X" />
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
-                android:onClick="@{() -> viewModel.move(1)}"
+                android:onClick="@{() -> viewModel.moveGame(1)}"
                 android:text="@{viewModel.field[1] }"
                 android:textSize="40sp"
                 tools:text="X" />
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
-                android:onClick="@{() -> viewModel.move(2)}"
+                android:onClick="@{() -> viewModel.moveGame(2)}"
                 android:text="@{viewModel.field[2] }"
                 android:textSize="40sp"
                 tools:text="X" />
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
-                android:onClick="@{() -> viewModel.move(3)}"
+                android:onClick="@{() -> viewModel.moveGame(3)}"
                 android:text="@{viewModel.field[3] }"
                 android:textSize="40sp"
                 tools:text="X" />
@@ -77,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
-                android:onClick="@{() -> viewModel.move(4)}"
+                android:onClick="@{() -> viewModel.moveGame(4)}"
                 android:text="@{viewModel.field[4] }"
                 android:textSize="40sp"
                 tools:text="X" />
@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
-                android:onClick="@{() -> viewModel.move(5)}"
+                android:onClick="@{() -> viewModel.moveGame(5)}"
                 android:text="@{ viewModel.field[5] }"
                 android:textSize="40sp"
                 tools:text="X" />
@@ -97,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
-                android:onClick="@{() -> viewModel.move(6)}"
+                android:onClick="@{() -> viewModel.moveGame(6)}"
                 android:text="@{ viewModel.field[6] }"
                 android:textSize="40sp"
                 tools:text="X" />
@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
-                android:onClick="@{() -> viewModel.move(7)}"
+                android:onClick="@{() -> viewModel.moveGame(7)}"
                 android:text="@{ viewModel.field[7] }"
                 android:textSize="40sp"
                 tools:text="X" />
@@ -117,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
-                android:onClick="@{() -> viewModel.move(8)}"
+                android:onClick="@{() -> viewModel.moveGame(8)}"
                 android:text="@{ viewModel.field[8] }"
                 android:textSize="40sp"
                 tools:text="X" />
@@ -127,13 +127,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
+            android:onClick="@{() -> viewModel.newGame()}"
             android:text="Новая игра"
+            android:textAllCaps="true"
+            android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/field"
-            android:onClick="@{() -> viewModel.newGame()}"
-        />
+            app:layout_constraintTop_toBottomOf="@id/field" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

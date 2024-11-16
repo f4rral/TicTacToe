@@ -20,12 +20,25 @@ class GameViewModel : ViewModel() {
 
     var activePlayer = "X"
 
+    val user = Player(symbol = "X")
+    val comp = Player(symbol = "O")
+
     init {
         _field.value = Array(9) {""}
+//        _field.value = arrayOf("O", "X", "O", "X", "", "", "O", "", "")
+//        _field.value = arrayOf("O", "", "", "", "", "", "", "", "")
+    }
+
+    fun controllerGame() {
+
+    }
+
+    fun togglePlayer(nextPlayer: String) {
+        activePlayer = if (activePlayer === "X") "O" else "X"
     }
 
     // Игровой ход
-    fun move(i: Int) {
+    fun moveGame(i: Int) {
         Log.d("GameViewModel move", i.toString())
 
         if (_isEndGame.value == true) {
@@ -40,9 +53,26 @@ class GameViewModel : ViewModel() {
         newFiled[i] = activePlayer
         _field.value = newFiled
 
-        checkWinner(newFiled)
+        val winner = checkWinner(newFiled)
 
-        activePlayer = if (activePlayer === "X") "O" else "X"
+        if (winner != null) {
+            _winPlayer.value = activePlayer
+            _isEndGame.value = true
+        }
+
+        if (activePlayer === "X") {
+            activePlayer = "O"
+
+            val bestMove = findBestMove(newFiled, activePlayer)
+
+            if (bestMove.index != null) {
+                moveGame(bestMove.index!!)
+            }
+
+            Log.d("findBestMove", "${bestMove.index}, ${bestMove.score}")
+        } else {
+            activePlayer = "X"
+        }
     }
 
     // Новая игра
@@ -52,7 +82,9 @@ class GameViewModel : ViewModel() {
     }
 
     // Определение победителя
-    private fun checkWinner(field: Array<String>) {
+    private fun checkWinner(field: Array<String>): String? {
+        var winPlayer: String? = null
+
         // Победные линии
         val winLines = arrayOf(
             arrayOf(0, 1, 2),
@@ -66,25 +98,103 @@ class GameViewModel : ViewModel() {
         )
 
         for (line in winLines) {
-            val a = _field.value?.get(line[0])
-            val b = _field.value?.get(line[1])
-            val c = _field.value?.get(line[2])
+            val a = field[line[0]]
+            val b = field[line[1]]
+            val c = field[line[2]]
 
             if (a != "" && a == b && a == c) {
-                Log.d("checkWinner", line.joinToString())
-                _winPlayer.value = a
-                _isEndGame.value = true
+                winPlayer = a
             }
         }
-    }
 
-    // Поиск пустых клеток
-    fun emptyIndices() {
-
+        return winPlayer
     }
 
     // Поиск лучшего хода
-    fun findBestMove() {
+    fun findBestMove(field: Array<String>, playerSymbol: String): BestMove {
+        var availSpots = emptyIndices(field);
+        var winner = checkWinner(field);
+
+//        Log.d("findBestMove", "findBestMove start ${field.joinToString()}; $playerSymbol; $winner")
+
+        if (winner == "O") {
+            return BestMove(score = -1)
+        }
+
+        if (winner == "X") {
+            return BestMove(score = 1)
+        }
+
+        if (availSpots.size == 0) {
+            return BestMove(score = 0)
+        }
+
+        val moves: ArrayList<BestMove> = ArrayList()
+
+        for (i in 0..<availSpots.size) {
+            val move = BestMove()
+            move.index = availSpots[i]
+
+            field[availSpots[i]] = playerSymbol
+
+            if (playerSymbol == "X") {
+                move.score = findBestMove(field, "O").score
+            } else {
+                move.score = findBestMove(field, "X").score
+            }
+
+            field[availSpots[i]] = ""
+            moves.add(move);
+        }
+
+        var bestMove = 0;
+        // если это ход ИИ, пройти циклом по ходам и выбрать ход с наибольшим количеством очков
+        if (playerSymbol == "X") {
+            var bestScore = -10000
+
+            for (i in 0..<moves.size) {
+                if (moves[i].score!! > bestScore) {
+                    bestScore = moves[i].score!!
+                    bestMove = i
+                }
+            }
+        // иначе пройти циклом по ходам и выбрать ход с наименьшим количеством очков
+        } else {
+            var bestScore = 10000;
+            for (i in 0..<moves.size) {
+                if (moves[i].score!! < bestScore) {
+                    bestScore = moves[i].score!!
+                    bestMove = i
+                }
+            }
+        }
+
+        return moves[bestMove]
+    }
+
+    // Поиск пустых клеток
+    fun emptyIndices(field: Array<String>): ArrayList<Int> {
+        val emptyCells: ArrayList<Int> = arrayListOf();
+
+        field.forEachIndexed { index, symbol ->
+            if (symbol === "") {
+                emptyCells.add(index)
+            }
+        }
+
+        return emptyCells
+    }
+}
+
+class BestMove(
+    var index: Int? = null,
+    var score: Int? = null
+)
+
+class Player(
+    var symbol: String
+) {
+    fun getMove() {
 
     }
 }
