@@ -5,7 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
+class BestMove(
+    var index: Int? = null,
+    var score: Int? = null
+)
+
 class GameViewModel : ViewModel() {
+    private var symbolX = "X"
+    private var symbolO = "O"
+
     private var _field: MutableLiveData<Array<String>> = MutableLiveData()
     val field: LiveData<Array<String>>
         get() = _field
@@ -18,23 +26,20 @@ class GameViewModel : ViewModel() {
     val isEndGame: LiveData<Boolean>
         get() = _isEndGame
 
-    var activePlayer = "X"
-
-    val user = Player(symbol = "X")
-    val comp = Player(symbol = "O")
+    private var activePlayer = symbolX
 
     init {
         _field.value = Array(9) {""}
-//        _field.value = arrayOf("O", "X", "O", "X", "", "", "O", "", "")
-//        _field.value = arrayOf("O", "", "", "", "", "", "", "", "")
-    }
-
-    fun controllerGame() {
-
-    }
-
-    fun togglePlayer(nextPlayer: String) {
-        activePlayer = if (activePlayer === "X") "O" else "X"
+//        _field.value = arrayOf(
+//            "O", "X", "O",
+//            "X", "", "",
+//            "O", "", ""
+//        )
+//        _field.value = arrayOf(
+//            "O", "", "",
+//            "", "", "",
+//            "", "", ""
+//        )
     }
 
     // Игровой ход
@@ -60,8 +65,8 @@ class GameViewModel : ViewModel() {
             _isEndGame.value = true
         }
 
-        if (activePlayer === "X") {
-            activePlayer = "O"
+        if (activePlayer === symbolX) {
+            activePlayer = symbolO
 
             val bestMove = findBestMove(newFiled, activePlayer)
 
@@ -71,13 +76,14 @@ class GameViewModel : ViewModel() {
 
             Log.d("findBestMove", "${bestMove.index}, ${bestMove.score}")
         } else {
-            activePlayer = "X"
+            activePlayer = symbolX
         }
     }
 
     // Новая игра
     fun newGame() {
         _field.value = Array(9) {""}
+        activePlayer = symbolX
         _isEndGame.value = false
     }
 
@@ -111,17 +117,15 @@ class GameViewModel : ViewModel() {
     }
 
     // Поиск лучшего хода
-    fun findBestMove(field: Array<String>, playerSymbol: String): BestMove {
-        var availSpots = emptyIndices(field);
-        var winner = checkWinner(field);
+    private fun findBestMove(field: Array<String>, playerSymbol: String): BestMove {
+        val availSpots = emptyIndices(field);
+        val winner = checkWinner(field);
 
-//        Log.d("findBestMove", "findBestMove start ${field.joinToString()}; $playerSymbol; $winner")
-
-        if (winner == "O") {
+        if (winner == symbolO) {
             return BestMove(score = -1)
         }
 
-        if (winner == "X") {
+        if (winner == symbolX) {
             return BestMove(score = 1)
         }
 
@@ -137,10 +141,10 @@ class GameViewModel : ViewModel() {
 
             field[availSpots[i]] = playerSymbol
 
-            if (playerSymbol == "X") {
-                move.score = findBestMove(field, "O").score
+            if (playerSymbol == symbolX) {
+                move.score = findBestMove(field, symbolO).score
             } else {
-                move.score = findBestMove(field, "X").score
+                move.score = findBestMove(field, symbolX).score
             }
 
             field[availSpots[i]] = ""
@@ -149,7 +153,7 @@ class GameViewModel : ViewModel() {
 
         var bestMove = 0;
         // если это ход ИИ, пройти циклом по ходам и выбрать ход с наибольшим количеством очков
-        if (playerSymbol == "X") {
+        if (playerSymbol == symbolX) {
             var bestScore = -10000
 
             for (i in 0..<moves.size) {
@@ -173,7 +177,7 @@ class GameViewModel : ViewModel() {
     }
 
     // Поиск пустых клеток
-    fun emptyIndices(field: Array<String>): ArrayList<Int> {
+    private fun emptyIndices(field: Array<String>): ArrayList<Int> {
         val emptyCells: ArrayList<Int> = arrayListOf();
 
         field.forEachIndexed { index, symbol ->
@@ -186,15 +190,4 @@ class GameViewModel : ViewModel() {
     }
 }
 
-class BestMove(
-    var index: Int? = null,
-    var score: Int? = null
-)
 
-class Player(
-    var symbol: String
-) {
-    fun getMove() {
-
-    }
-}
