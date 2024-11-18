@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlin.random.Random
 
 class BestMove(
     var index: Int? = null,
@@ -11,8 +12,8 @@ class BestMove(
 )
 
 class GameViewModel : ViewModel() {
-    private var symbolX = "X"
-    private var symbolO = "O"
+    private var symbolHuman = "X"       // Игрок
+    private var symbolAndroid = "O"     // Android
 
     private var _field: MutableLiveData<Array<String>> = MutableLiveData()
     val field: LiveData<Array<String>>
@@ -26,7 +27,7 @@ class GameViewModel : ViewModel() {
     val isEndGame: LiveData<Boolean>
         get() = _isEndGame
 
-    private var activePlayer = symbolX
+    private var activePlayer = symbolHuman
 
     init {
         _field.value = Array(9) {""}
@@ -40,22 +41,32 @@ class GameViewModel : ViewModel() {
 //            "", "", "",
 //            "", "", ""
 //        )
+
+        startGame()
+    }
+
+    private fun startGame() {
+        activePlayer = if (Random.nextBoolean()) symbolHuman else symbolAndroid
+
+        if (activePlayer == symbolAndroid) {
+            moveGame((0..8).random())
+        }
     }
 
     // Игровой ход
-    fun moveGame(i: Int) {
-        Log.d("GameViewModel move", i.toString())
+    fun moveGame(move: Int) {
+        Log.d("GameViewModel move", move.toString())
 
         if (_isEndGame.value == true) {
             return
         }
 
-        if (_field.value?.get(i) != "") {
+        if (_field.value?.get(move) != "") {
             return
         }
 
         val newFiled = _field.value!!.copyOf()
-        newFiled[i] = activePlayer
+        newFiled[move] = activePlayer
         _field.value = newFiled
 
         val winner = checkWinner(newFiled)
@@ -65,26 +76,32 @@ class GameViewModel : ViewModel() {
             _isEndGame.value = true
         }
 
-        if (activePlayer === symbolX) {
-            activePlayer = symbolO
+        if (activePlayer === symbolHuman) {
+            activePlayer = symbolAndroid
 
-            val bestMove = findBestMove(newFiled, activePlayer)
-
-            if (bestMove.index != null) {
-                moveGame(bestMove.index!!)
+            val bestMove = if ((0..9).random() < 8) {
+                findBestMove(newFiled, activePlayer).index
+            } else {
+                findRandomMove(newFiled)
             }
 
-            Log.d("findBestMove", "${bestMove.index}, ${bestMove.score}")
+            if (bestMove != null) {
+                moveGame(bestMove)
+            }
+
+            Log.d("findBestMove", "${bestMove}, ${bestMove}")
         } else {
-            activePlayer = symbolX
+            activePlayer = symbolHuman
         }
     }
 
     // Новая игра
     fun newGame() {
         _field.value = Array(9) {""}
-        activePlayer = symbolX
+        activePlayer = symbolHuman
         _isEndGame.value = false
+
+        startGame()
     }
 
     // Определение победителя
@@ -121,11 +138,11 @@ class GameViewModel : ViewModel() {
         val availSpots = emptyIndices(field);
         val winner = checkWinner(field);
 
-        if (winner == symbolO) {
+        if (winner == symbolAndroid) {
             return BestMove(score = -1)
         }
 
-        if (winner == symbolX) {
+        if (winner == symbolHuman) {
             return BestMove(score = 1)
         }
 
@@ -141,10 +158,10 @@ class GameViewModel : ViewModel() {
 
             field[availSpots[i]] = playerSymbol
 
-            if (playerSymbol == symbolX) {
-                move.score = findBestMove(field, symbolO).score
+            if (playerSymbol == symbolHuman) {
+                move.score = findBestMove(field, symbolAndroid).score
             } else {
-                move.score = findBestMove(field, symbolX).score
+                move.score = findBestMove(field, symbolHuman).score
             }
 
             field[availSpots[i]] = ""
@@ -153,7 +170,7 @@ class GameViewModel : ViewModel() {
 
         var bestMove = 0;
         // если это ход ИИ, пройти циклом по ходам и выбрать ход с наибольшим количеством очков
-        if (playerSymbol == symbolX) {
+        if (playerSymbol == symbolHuman) {
             var bestScore = -10000
 
             for (i in 0..<moves.size) {
@@ -174,6 +191,20 @@ class GameViewModel : ViewModel() {
         }
 
         return moves[bestMove]
+    }
+
+    // Поиск случайного хода
+    private fun findRandomMove(field: Array<String>): Int? {
+        Log.d("findRandomMove", field.joinToString())
+        Log.d("findRandomMove", emptyIndices(field).size.toString())
+
+        emptyIndices(field)
+
+        if (emptyIndices(field).size == 0) {
+            return null
+        }
+
+        return emptyIndices(field).random();
     }
 
     // Поиск пустых клеток
