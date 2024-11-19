@@ -12,8 +12,16 @@ class BestMove(
 )
 
 class GameViewModel : ViewModel() {
-    private var symbolHuman = "X"       // Игрок
-    private var symbolAndroid = "O"     // Android
+    private var symbolHuman = "X"   // Игрок
+    private var symbolAndroid = "O" // Android
+
+    private var _countHuman: MutableLiveData<Int> = MutableLiveData(0)
+    val countHuman: LiveData<Int>
+        get() = _countHuman
+
+    private var _countAndroid: MutableLiveData<Int> = MutableLiveData(0)
+    val countAndroid: LiveData<Int>
+        get() = _countAndroid
 
     private var _field: MutableLiveData<Array<String>> = MutableLiveData()
     val field: LiveData<Array<String>>
@@ -74,14 +82,24 @@ class GameViewModel : ViewModel() {
         if (winner != null) {
             _winPlayer.value = activePlayer
             _isEndGame.value = true
+
+            if (activePlayer == symbolHuman) {
+                _countHuman.value = _countHuman.value?.plus(1)
+            }
+
+            if (activePlayer == symbolAndroid) {
+                _countAndroid.value = _countAndroid.value?.plus(1)
+            }
         }
 
         if (activePlayer === symbolHuman) {
             activePlayer = symbolAndroid
 
             val bestMove = if ((0..9).random() < 8) {
+                Log.d("moveGame", "findBestMove")
                 findBestMove(newFiled, activePlayer).index
             } else {
+                Log.d("moveGame", "findRandomMove")
                 findRandomMove(newFiled)
             }
 
@@ -89,7 +107,7 @@ class GameViewModel : ViewModel() {
                 moveGame(bestMove)
             }
 
-            Log.d("findBestMove", "${bestMove}, ${bestMove}")
+            Log.d("moveGame", "${bestMove}, ${bestMove}")
         } else {
             activePlayer = symbolHuman
         }
