@@ -63,8 +63,6 @@ class GameViewModel : ViewModel() {
 
     // Игровой ход
     fun moveGame(move: Int) {
-        Log.d("GameViewModel move", move.toString())
-
         if (_isEndGame.value == true) {
             return
         }
@@ -96,10 +94,8 @@ class GameViewModel : ViewModel() {
             activePlayer = symbolAndroid
 
             val bestMove = if ((0..9).random() < 8) {
-                Log.d("moveGame", "findBestMove")
                 findBestMove(newFiled, activePlayer).index
             } else {
-                Log.d("moveGame", "findRandomMove")
                 findRandomMove(newFiled)
             }
 
