@@ -3,10 +3,13 @@ package com.hfad.tictactoe
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.hfad.tictactoe.viewmodels.GameViewModel
 import com.hfad.tictactoe.databinding.ActivityMainBinding
+import com.hfad.tictactoe.viewmodels.GameViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
@@ -17,7 +20,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        viewModel = GameViewModel()
+        val pictureTic = ResourcesCompat.getDrawable(resources, R.drawable.tic, null)
+        val pictureTac = ResourcesCompat.getDrawable(resources, R.drawable.tac, null)
+
+        viewModel = ViewModelProvider(this, GameViewModelFactory(pictureTic, pictureTac))[GameViewModel::class.java]
 
         binding.viewModel = viewModel
         binding.setLifecycleOwner(this)

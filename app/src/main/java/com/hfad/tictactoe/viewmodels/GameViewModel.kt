@@ -1,5 +1,6 @@
 package com.hfad.tictactoe.viewmodels
 
+import android.graphics.drawable.Drawable
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,7 +12,10 @@ class BestMove(
     var score: Int? = null
 )
 
-class GameViewModel : ViewModel() {
+class GameViewModel(
+    private var pictureHuman: Drawable? = null,
+    private var pictureAndroid: Drawable? = null,
+) : ViewModel() {
     private var symbolHuman = "X"   // Игрок
     private var symbolAndroid = "O" // Android
 
@@ -26,6 +30,10 @@ class GameViewModel : ViewModel() {
     private var _field: MutableLiveData<Array<String>> = MutableLiveData()
     val field: LiveData<Array<String>>
         get() = _field
+
+    private var _fieldDrawable: MutableLiveData<List<Drawable?>> = MutableLiveData()
+    val fieldDrawable: LiveData<List<Drawable?>>
+        get() = _fieldDrawable
 
     private var _winPlayer: MutableLiveData<String?> = MutableLiveData()
     val winPlayer: LiveData<String?>
@@ -74,6 +82,8 @@ class GameViewModel : ViewModel() {
         val newFiled = _field.value!!.copyOf()
         newFiled[move] = activePlayer
         _field.value = newFiled
+        updateFieldDrawable()
+        Log.d("moveGame updateFieldDrawable", "${fieldDrawable.value?.joinToString()}")
 
         val winner = checkWinner(newFiled)
 
@@ -111,7 +121,8 @@ class GameViewModel : ViewModel() {
 
     // Новая игра
     fun newGame() {
-        _field.value = Array(9) {""}
+        _field.value = Array(9) { "" }
+        _fieldDrawable.value = List(9) { null }
         activePlayer = symbolHuman
         _isEndGame.value = false
 
@@ -232,6 +243,23 @@ class GameViewModel : ViewModel() {
         }
 
         return emptyCells
+    }
+
+    private fun updateFieldDrawable() {
+        _fieldDrawable.value = _field.value?.map { getPictureForSymbol(it) }
+    }
+
+    // Получение изображения
+    fun getPictureForSymbol(symbol: String): Drawable? {
+        if (symbol == symbolHuman) {
+            return pictureAndroid
+        }
+
+        if (symbol == symbolAndroid) {
+            return pictureHuman
+        }
+
+        return null
     }
 }
 

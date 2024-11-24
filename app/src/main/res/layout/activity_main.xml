@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MainActivity"
->
+    tools:context=".MainActivity">
+
     <data>
         <variable
             name="viewModel"
@@ -34,95 +33,122 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <Button
+            <ImageButton
                 style="@style/GameFieldButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
+                android:padding="24dp"
+                android:scaleType="fitXY"
+                android:src="@{viewModel.fieldDrawable[0]}"
                 android:onClick="@{() -> viewModel.moveGame(0)}"
-                android:text="@{viewModel.field[0] }"
-                tools:text="X" />
+                tools:src="@drawable/tic"
+            />
 
-            <Button
+            <ImageButton
                 style="@style/GameFieldButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
+                android:padding="24dp"
+                android:scaleType="fitXY"
+                android:src="@{viewModel.fieldDrawable[1]}"
                 android:onClick="@{() -> viewModel.moveGame(1)}"
-                android:text="@{viewModel.field[1] }"
-                tools:text="X" />
+                tools:src="@drawable/tic"
+            />
 
-            <Button
+            <ImageButton
                 style="@style/GameFieldButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
+                android:padding="24dp"
+                android:scaleType="fitXY"
+                android:src="@{viewModel.fieldDrawable[2]}"
                 android:onClick="@{() -> viewModel.moveGame(2)}"
-                android:text="@{viewModel.field[2] }"
-                tools:text="X" />
+                tools:src="@drawable/tic"
+            />
 
-            <Button
+            <ImageButton
                 style="@style/GameFieldButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
+                android:padding="24dp"
+                android:scaleType="fitXY"
+                android:src="@{viewModel.fieldDrawable[3]}"
                 android:onClick="@{() -> viewModel.moveGame(3)}"
-                android:text="@{viewModel.field[3] }"
-                tools:text="X" />
+                tools:src="@drawable/tic"
+            />
 
-            <Button
+            <ImageButton
                 style="@style/GameFieldButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
+                android:padding="24dp"
+                android:scaleType="fitXY"
+                android:src="@{viewModel.fieldDrawable[4]}"
                 android:onClick="@{() -> viewModel.moveGame(4)}"
-                android:text="@{viewModel.field[4] }"
-                tools:text="X" />
+                tools:src="@drawable/tic"
+            />
 
-            <Button
+            <ImageButton
                 style="@style/GameFieldButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
+                android:padding="24dp"
+                android:scaleType="fitXY"
+                android:src="@{viewModel.fieldDrawable[5]}"
                 android:onClick="@{() -> viewModel.moveGame(5)}"
-                android:text="@{ viewModel.field[5] }"
-                tools:text="X" />
+                tools:src="@drawable/tic"
+                />
 
-            <Button
+            <ImageButton
                 style="@style/GameFieldButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
+                android:padding="24dp"
+                android:scaleType="fitXY"
+                android:src="@{viewModel.fieldDrawable[6]}"
                 android:onClick="@{() -> viewModel.moveGame(6)}"
-                android:text="@{ viewModel.field[6] }"
-                tools:text="X" />
+                tools:src="@drawable/tic"
+            />
 
-            <Button
+            <ImageButton
                 style="@style/GameFieldButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
+                android:padding="24dp"
+                android:scaleType="fitXY"
+                android:src="@{viewModel.fieldDrawable[7]}"
                 android:onClick="@{() -> viewModel.moveGame(7)}"
-                android:text="@{ viewModel.field[7] }"
-                tools:text="X" />
+                tools:src="@drawable/tic"
+            />
 
-            <Button
+            <ImageButton
                 style="@style/GameFieldButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
+                android:padding="24dp"
+                android:scaleType="fitXY"
+                android:src="@{viewModel.fieldDrawable[8]}"
                 android:onClick="@{() -> viewModel.moveGame(8)}"
-                android:text="@{ viewModel.field[8] }"
-                tools:text="X" />
+                tools:src="@drawable/tic"
+            />
         </GridLayout>
 
         <Button
@@ -150,10 +176,10 @@
             android:layout_marginEnd="24dp"
             android:background="@drawable/gradient_scoreboard"
             android:orientation="vertical"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
             android:paddingLeft="16dp"
+            android:paddingTop="8dp"
             android:paddingRight="16dp"
+            android:paddingBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/field"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/constraintLayout2"
@@ -164,7 +190,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:scaleType="fitStart"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:srcCompat="@drawable/tic" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -196,12 +222,12 @@
             android:layout_height="80dp"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="32dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
             android:background="@drawable/gradient_scoreboard"
             android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/field"
             app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
             app:layout_constraintStart_toStartOf="parent"
@@ -213,7 +239,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:scaleType="fitStart"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:srcCompat="@drawable/tac" />
 
             <LinearLayout
                 android:layout_width="match_parent"
