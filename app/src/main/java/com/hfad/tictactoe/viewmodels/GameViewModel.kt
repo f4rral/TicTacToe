@@ -7,7 +7,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlin.random.Random
 
-class BestMove(
+class GameCell(
+    var symbol: String = "",
+    var drawable: Drawable? = null,
+    var isWin: Boolean = false
+)
+
+data class BestMove(
     var index: Int? = null,
     var score: Int? = null
 )
@@ -27,14 +33,6 @@ class GameViewModel(
     val countAndroid: LiveData<Int>
         get() = _countAndroid
 
-    private var _field: MutableLiveData<Array<String>> = MutableLiveData()
-    val field: LiveData<Array<String>>
-        get() = _field
-
-    private var _fieldDrawable: MutableLiveData<List<Drawable?>> = MutableLiveData()
-    val fieldDrawable: LiveData<List<Drawable?>>
-        get() = _fieldDrawable
-
     private var _winPlayer: MutableLiveData<String?> = MutableLiveData()
     val winPlayer: LiveData<String?>
         get() = _winPlayer
@@ -43,20 +41,15 @@ class GameViewModel(
     val isEndGame: LiveData<Boolean>
         get() = _isEndGame
 
+    private var _fieldGame: MutableLiveData<List<GameCell>> = MutableLiveData()
+    val fieldGame: MutableLiveData<List<GameCell>>
+        get() = _fieldGame
+
     private var activePlayer = symbolHuman
 
     init {
-        _field.value = Array(9) {""}
-//        _field.value = arrayOf(
-//            "O", "X", "O",
-//            "X", "", "",
-//            "O", "", ""
-//        )
-//        _field.value = arrayOf(
-//            "O", "", "",
-//            "", "", "",
-//            "", "", ""
-//        )
+        _fieldGame.value = List(9) { GameCell() }
+        Log.d("init fieldGame", "${_fieldGame.value?.joinToString()}")
 
         startGame()
     }
@@ -75,17 +68,19 @@ class GameViewModel(
             return
         }
 
-        if (_field.value?.get(move) != "") {
+        if (_fieldGame.value?.get(move)?.symbol != "") {
             return
         }
 
-        val newFiled = _field.value!!.copyOf()
-        newFiled[move] = activePlayer
-        _field.value = newFiled
-        updateFieldDrawable()
-        Log.d("moveGame updateFieldDrawable", "${fieldDrawable.value?.joinToString()}")
+        val newFieldGame = _fieldGame.value!!
+        newFieldGame[move].symbol = activePlayer
+        newFieldGame[move].drawable = getPictureForSymbol(activePlayer)
 
-        val winner = checkWinner(newFiled)
+        _fieldGame.value = newFieldGame
+
+        Log.d("moveGame fieldGame", "${_fieldGame.value?.joinToString()}")
+
+        val winner = checkWinner(newFieldGame)
 
         if (winner != null) {
             _winPlayer.value = activePlayer
@@ -104,9 +99,9 @@ class GameViewModel(
             activePlayer = symbolAndroid
 
             val bestMove = if ((0..9).random() < 8) {
-                findBestMove(newFiled, activePlayer).index
+                findBestMove(newFieldGame, activePlayer).index
             } else {
-                findRandomMove(newFiled)
+                findRandomMove(newFieldGame)
             }
 
             if (bestMove != null) {
@@ -121,19 +116,18 @@ class GameViewModel(
 
     // Новая игра
     fun newGame() {
-        _field.value = Array(9) { "" }
-        _fieldDrawable.value = List(9) { null }
         activePlayer = symbolHuman
         _isEndGame.value = false
+
+        _fieldGame.value = List(9) { GameCell() }
 
         startGame()
     }
 
-    // Определение победителя
-    private fun checkWinner(field: Array<String>): String? {
+    private fun checkWinner(fieldGame: List<GameCell>): String? {
         var winPlayer: String? = null
 
-        // Победные линии
+        // Победные комбинации
         val winLines = arrayOf(
             arrayOf(0, 1, 2),
             arrayOf(3, 4, 5),
@@ -146,9 +140,9 @@ class GameViewModel(
         )
 
         for (line in winLines) {
-            val a = field[line[0]]
-            val b = field[line[1]]
-            val c = field[line[2]]
+            val a = fieldGame[line[0]].symbol
+            val b = fieldGame[line[1]].symbol
+            val c = fieldGame[line[2]].symbol
 
             if (a != "" && a == b && a == c) {
                 winPlayer = a
@@ -159,7 +153,7 @@ class GameViewModel(
     }
 
     // Поиск лучшего хода
-    private fun findBestMove(field: Array<String>, playerSymbol: String): BestMove {
+    private fun findBestMove(field: List<GameCell>, playerSymbol: String): BestMove {
         val availSpots = emptyIndices(field);
         val winner = checkWinner(field);
 
@@ -181,7 +175,7 @@ class GameViewModel(
             val move = BestMove()
             move.index = availSpots[i]
 
-            field[availSpots[i]] = playerSymbol
+            field[availSpots[i]].symbol = playerSymbol
 
             if (playerSymbol == symbolHuman) {
                 move.score = findBestMove(field, symbolAndroid).score
@@ -189,7 +183,7 @@ class GameViewModel(
                 move.score = findBestMove(field, symbolHuman).score
             }
 
-            field[availSpots[i]] = ""
+            field[availSpots[i]].symbol = ""
             moves.add(move);
         }
 
@@ -204,7 +198,7 @@ class GameViewModel(
                     bestMove = i
                 }
             }
-        // иначе пройти циклом по ходам и выбрать ход с наименьшим количеством очков
+            // иначе пройти циклом по ходам и выбрать ход с наименьшим количеством очков
         } else {
             var bestScore = 10000;
             for (i in 0..<moves.size) {
@@ -219,25 +213,22 @@ class GameViewModel(
     }
 
     // Поиск случайного хода
-    private fun findRandomMove(field: Array<String>): Int? {
-        Log.d("findRandomMove", field.joinToString())
-        Log.d("findRandomMove", emptyIndices(field).size.toString())
+    private fun findRandomMove(field: List<GameCell>): Int? {
+        val emptyIndices = emptyIndices(field);
 
-        emptyIndices(field)
-
-        if (emptyIndices(field).size == 0) {
+        if (emptyIndices.size == 0) {
             return null
         }
 
-        return emptyIndices(field).random();
+        return emptyIndices.random();
     }
 
     // Поиск пустых клеток
-    private fun emptyIndices(field: Array<String>): ArrayList<Int> {
+    private fun emptyIndices(field: List<GameCell>): ArrayList<Int> {
         val emptyCells: ArrayList<Int> = arrayListOf();
 
-        field.forEachIndexed { index, symbol ->
-            if (symbol === "") {
+        field.forEachIndexed { index, cell ->
+            if (cell.symbol === "") {
                 emptyCells.add(index)
             }
         }
@@ -245,12 +236,8 @@ class GameViewModel(
         return emptyCells
     }
 
-    private fun updateFieldDrawable() {
-        _fieldDrawable.value = _field.value?.map { getPictureForSymbol(it) }
-    }
-
     // Получение изображения
-    fun getPictureForSymbol(symbol: String): Drawable? {
+    private fun getPictureForSymbol(symbol: String): Drawable? {
         if (symbol == symbolHuman) {
             return pictureAndroid
         }
@@ -262,5 +249,3 @@ class GameViewModel(
         return null
     }
 }
-
-

@@ -41,7 +41,7 @@
                 android:layout_columnWeight="1"
                 android:padding="24dp"
                 android:scaleType="fitXY"
-                android:src="@{viewModel.fieldDrawable[0]}"
+                android:src="@{viewModel.fieldGame[0].drawable}"
                 android:onClick="@{() -> viewModel.moveGame(0)}"
                 tools:src="@drawable/tic"
             />
@@ -54,7 +54,7 @@
                 android:layout_columnWeight="1"
                 android:padding="24dp"
                 android:scaleType="fitXY"
-                android:src="@{viewModel.fieldDrawable[1]}"
+                android:src="@{viewModel.fieldGame[1].drawable}"
                 android:onClick="@{() -> viewModel.moveGame(1)}"
                 tools:src="@drawable/tic"
             />
@@ -67,7 +67,7 @@
                 android:layout_columnWeight="1"
                 android:padding="24dp"
                 android:scaleType="fitXY"
-                android:src="@{viewModel.fieldDrawable[2]}"
+                android:src="@{viewModel.fieldGame[2].drawable}"
                 android:onClick="@{() -> viewModel.moveGame(2)}"
                 tools:src="@drawable/tic"
             />
@@ -80,7 +80,7 @@
                 android:layout_columnWeight="1"
                 android:padding="24dp"
                 android:scaleType="fitXY"
-                android:src="@{viewModel.fieldDrawable[3]}"
+                android:src="@{viewModel.fieldGame[3].drawable}"
                 android:onClick="@{() -> viewModel.moveGame(3)}"
                 tools:src="@drawable/tic"
             />
@@ -93,7 +93,7 @@
                 android:layout_columnWeight="1"
                 android:padding="24dp"
                 android:scaleType="fitXY"
-                android:src="@{viewModel.fieldDrawable[4]}"
+                android:src="@{viewModel.fieldGame[4].drawable}"
                 android:onClick="@{() -> viewModel.moveGame(4)}"
                 tools:src="@drawable/tic"
             />
@@ -106,7 +106,7 @@
                 android:layout_columnWeight="1"
                 android:padding="24dp"
                 android:scaleType="fitXY"
-                android:src="@{viewModel.fieldDrawable[5]}"
+                android:src="@{viewModel.fieldGame[5].drawable}"
                 android:onClick="@{() -> viewModel.moveGame(5)}"
                 tools:src="@drawable/tic"
                 />
@@ -119,7 +119,7 @@
                 android:layout_columnWeight="1"
                 android:padding="24dp"
                 android:scaleType="fitXY"
-                android:src="@{viewModel.fieldDrawable[6]}"
+                android:src="@{viewModel.fieldGame[6].drawable}"
                 android:onClick="@{() -> viewModel.moveGame(6)}"
                 tools:src="@drawable/tic"
             />
@@ -132,7 +132,7 @@
                 android:layout_columnWeight="1"
                 android:padding="24dp"
                 android:scaleType="fitXY"
-                android:src="@{viewModel.fieldDrawable[7]}"
+                android:src="@{viewModel.fieldGame[7].drawable}"
                 android:onClick="@{() -> viewModel.moveGame(7)}"
                 tools:src="@drawable/tic"
             />
@@ -145,7 +145,7 @@
                 android:layout_columnWeight="1"
                 android:padding="24dp"
                 android:scaleType="fitXY"
-                android:src="@{viewModel.fieldDrawable[8]}"
+                android:src="@{viewModel.fieldGame[8].drawable}"
                 android:onClick="@{() -> viewModel.moveGame(8)}"
                 tools:src="@drawable/tic"
             />
