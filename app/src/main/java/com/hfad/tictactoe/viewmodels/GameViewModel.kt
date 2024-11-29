@@ -13,9 +13,14 @@ class GameCell(
     var isWin: Boolean = false
 )
 
-data class BestMove(
+class BestMove(
     var index: Int? = null,
     var score: Int? = null
+)
+
+class Winner(
+    var symbol: String? = null,
+    var line: Array<Int>? = null,
 )
 
 class GameViewModel(
@@ -76,11 +81,9 @@ class GameViewModel(
         newFieldGame[move].symbol = activePlayer
         newFieldGame[move].drawable = getPictureForSymbol(activePlayer)
 
-        _fieldGame.value = newFieldGame
-
-        Log.d("moveGame fieldGame", "${_fieldGame.value?.joinToString()}")
-
         val winner = checkWinner(newFieldGame)
+
+        Log.d("moveGame winner", "${winner?.line?.get(0)} ${winner?.line?.get(1)} ${winner?.line?.get(2)}")
 
         if (winner != null) {
             _winPlayer.value = activePlayer
@@ -93,6 +96,8 @@ class GameViewModel(
             if (activePlayer == symbolAndroid) {
                 _countAndroid.value = _countAndroid.value?.plus(1)
             }
+
+            winner.line?.forEach { newFieldGame[it].isWin = true }
         }
 
         if (activePlayer === symbolHuman) {
@@ -107,11 +112,11 @@ class GameViewModel(
             if (bestMove != null) {
                 moveGame(bestMove)
             }
-
-            Log.d("moveGame", "${bestMove}, ${bestMove}")
         } else {
             activePlayer = symbolHuman
         }
+
+        _fieldGame.value = newFieldGame
     }
 
     // Новая игра
@@ -124,8 +129,8 @@ class GameViewModel(
         startGame()
     }
 
-    private fun checkWinner(fieldGame: List<GameCell>): String? {
-        var winPlayer: String? = null
+    private fun checkWinner(fieldGame: List<GameCell>): Winner? {
+        var winPlayer: Winner? = null
 
         // Победные комбинации
         val winLines = arrayOf(
@@ -145,7 +150,7 @@ class GameViewModel(
             val c = fieldGame[line[2]].symbol
 
             if (a != "" && a == b && a == c) {
-                winPlayer = a
+                winPlayer = Winner(symbol = a, line = line)
             }
         }
 
@@ -157,11 +162,11 @@ class GameViewModel(
         val availSpots = emptyIndices(field);
         val winner = checkWinner(field);
 
-        if (winner == symbolAndroid) {
+        if (winner?.symbol == symbolAndroid) {
             return BestMove(score = -1)
         }
 
-        if (winner == symbolHuman) {
+        if (winner?.symbol == symbolHuman) {
             return BestMove(score = 1)
         }
 
